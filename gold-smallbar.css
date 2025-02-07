@@ -1,0 +1,333 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  body {
+    background-color: #f5f5f5;
+    padding: 2rem;
+    min-height: 100vh;
+  }
+
+  .xd9b-mainWrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Header Styles */
+  .xd9b-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .xd9b-header h1 {
+    color: #002458;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .xd9b-header p {
+    color: #666;
+  }
+
+  /* Price Cards Grid */
+  .xd9b-priceGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .xd9b-priceCard {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+
+  .xd9b-priceCard:hover {
+    transform: scale(1.05);
+  }
+
+  .xd9b-priceCardHeader {
+    background: linear-gradient(135deg, #002458 0%, #003785 100%);
+    color: white;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .xd9b-priceCardBody {
+    padding: 1.5rem;
+    text-align: center;
+  }
+
+  .xd9b-price {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #002458;
+    margin-bottom: 1rem;
+  }
+
+  .xd9b-priceNote {
+    color: #666;
+    font-size: 0.875rem;
+  }
+
+  .xd9b-footerNote {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 3rem;
+  }
+
+  .xd9b-footerLabel {
+    font-weight: bold;
+    color: #333;
+  }
+
+  .xd9b-priceDisclaimer {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #fff3cd;
+    border-left: 4px solid #ffc107;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    color: #856404;
+  }
+
+  .xd9b-disclaimerIcon {
+    margin-right: 10px;
+    font-style: normal;
+    font-size: 1.1rem;
+  }
+
+  .xd9b-footerNote span {
+    color: #002458;
+    font-weight: 600;
+  }
+
+  /* Products Section */
+  .xd9b-productSection {
+    margin-bottom: 3rem;
+  }
+
+  .xd9b-productSection h2 {
+    color: #002458;
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .xd9b-productGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+
+  .xd9b-productItem {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.09);
+    transition: transform 0.3s ease;
+  }
+
+  .xd9b-productItem:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .xd9b-productImage {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    cursor: pointer;
+  }
+
+  .xd9b-productDetails {
+    padding: 1.35rem;
+  }
+
+  .xd9b-productName {
+    color: #002458;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .xd9b-productPrice {
+    color: #002458;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  /* Modal Styles */
+  .xd9b-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .xd9b-modal.active {
+    display: flex;
+  }
+
+  .xd9b-modal-content {
+    max-width: 90%;
+    max-height: 90vh;
+    position: relative;
+  }
+
+  .xd9b-modal-image {
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+  }
+
+  .xd9b-modal-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 5px;
+  }
+
+  .xd9b-buyButton {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    width: 100%;
+    cursor: pointer;
+    margin-top: 15px;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .xd9b-buyButton:hover {
+    background-color: #0056b3;
+  }
+
+  @media (max-width: 1024px) {
+    .xd9b-productGrid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .xd9b-priceGrid {
+      grid-template-columns: 1fr;
+    }
+
+    .xd9b-productGrid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .xd9b-productGrid {
+      grid-template-columns: 1fr;
+    }
+
+    .xd9b-productImage {
+      height: 70%;
+    }
+
+    body {
+      padding: 1rem;
+    }
+  }
+
+  /* iPad Mini & iPad Air */
+  @media only screen and (min-width: 768px) and (max-width: 1024px) {
+    .xd9b-mainWrapper {
+      max-width: 95%;
+      padding: 0 20px;
+    }
+
+    .xd9b-header h1 {
+      font-size: 2rem;
+    }
+
+    .xd9b-productGrid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .xd9b-productImage {
+      height: 65%;
+    }
+
+    .xd9b-productDetails {
+      padding: 1rem;
+    }
+
+    .xd9b-productName {
+      font-size: 14px;
+    }
+
+    .xd9b-productPrice {
+      font-size: 1.25rem;
+    }
+
+    .xd9b-priceGrid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .xd9b-price {
+      font-size: 2rem;
+    }
+  }
+
+  /* iPad Pro */
+  @media only screen and (min-width: 1024px) and (max-width: 1366px) {
+    .xd9b-mainWrapper {
+      max-width: 95%;
+    }
+
+    .xd9b-productGrid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+
+    .xd9b-productImage {
+      height: 260px;
+    }
+
+    .xd9b-priceGrid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+  }
+
+  /* iPad Landscape Orientation */
+  @media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    .xd9b-productGrid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .xd9b-productImage {
+      height: 220px;
+    }
+  }
