@@ -4,7 +4,7 @@
 const CONFIG = {
   BAHT_TO_GRAM: 15.244,
   UPDATE_INTERVAL: 30000,
-  API_BASE_URL: "http://localhost:8083/api/v1/products",
+  API_BASE_URL: "http://192.168.46.240/api/v1/products",
   PRODUCTS_LIMIT: 12,
 }
 
