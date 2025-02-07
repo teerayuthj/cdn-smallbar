@@ -71,6 +71,7 @@
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 3rem;
+    font-size: 16px;
   }
 
   .xd9b-footerLabel {
@@ -150,10 +151,11 @@
   }
 
   .xd9b-productPrice {
-    color: #002458;
-    font-size: 1.5rem;
+    color: red;
+    font-size: 2.5rem;
     font-weight: bold;
-  }
+    text-align: center;
+    }
 
   /* Modal Styles */
   .xd9b-modal {
@@ -206,7 +208,7 @@
     width: 100%;
     cursor: pointer;
     margin-top: 15px;
-    font-size: 1rem;
+    font-size: 16px;
     transition: background-color 0.3s;
     text-decoration: none;
     display: inline-block;
