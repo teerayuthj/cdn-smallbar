@@ -1,20 +1,8 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-
-  body {
-    background-color: #f5f5f5;
-    padding: 2rem;
-    min-height: 100vh;
-  }
-
-  .xd9b-mainWrapper {
+.xd9b-mainWrapper {
     max-width: 1200px;
     margin: 0 auto;
-  }
+    padding: 15px;
+}
 
   /* Header Styles */
   .xd9b-header {
@@ -24,12 +12,13 @@
 
   .xd9b-header h1 {
     color: #002458;
-    font-size: 2.5rem;
     margin-bottom: 0.5rem;
   }
 
   .xd9b-header p {
     color: #666;
+    font-size: 16px;
+    margin-top: 15px;
   }
 
   /* Price Cards Grid */
@@ -73,7 +62,7 @@
 
   .xd9b-priceNote {
     color: #666;
-    font-size: 0.875rem;
+    font-size: 16px;
   }
 
   .xd9b-footerNote {
@@ -244,6 +233,12 @@
     }
   }
 
+  @media (min-width: 768px) {
+    h2, .h2 {
+        font-size: 36px !important;
+    }
+  }
+
   @media (max-width: 480px) {
     .xd9b-productGrid {
       grid-template-columns: 1fr;
@@ -263,10 +258,6 @@
     .xd9b-mainWrapper {
       max-width: 95%;
       padding: 0 20px;
-    }
-
-    .xd9b-header h1 {
-      font-size: 2rem;
     }
 
     .xd9b-productGrid {
@@ -296,7 +287,7 @@
     }
 
     .xd9b-price {
-      font-size: 2rem;
+      font-size: 4rem;
     }
   }
 
