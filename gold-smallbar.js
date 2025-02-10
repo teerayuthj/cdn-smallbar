@@ -14,55 +14,46 @@ const defaultTypes = {
     weight: 0.3,
     apiPath: "gold-03g",
     title: "ราคาทองคำ 0.3 กรัม",
-    priceNote: "เอาทอง 0.3 กรัมไปขายคืนร้านทอง",
   },
   "06gram": {
     weight: 0.6,
     apiPath: "gold-06g",
     title: "ราคาทอง 0.6 กรัม",
-    priceNote: "เอาทอง 0.6 กรัมไปขายคืนร้านทอง",
   },
   "1gram": {
     weight: 1.0,
     apiPath: "gold-1g",
     title: "ราคาทอง 1 กรัม",
-    priceNote: "เอาทอง 1 กรัมไปขายคืนร้านทอง",
   },
   "0125baht": {
     weight: 1.9,
     apiPath: "gold-0125baht",
     title: "ราคาทองครึ่งสลึง",
-    priceNote: "เอาทองครึ่งสลึงไปขายคืนร้านทอง",
   },
   "025baht": {
     weight: 3.8,
     apiPath: "gold-025baht",
     title: "ราคาทอง 1 สลึง",
-    priceNote: "เอาทอง 1 สลึงไปขายคืนร้านทอง",
   },
   "05baht": {
     weight: 7.6,
     apiPath: "gold-05baht",
     title: "ราคาทอง 2 สลึง",
-    priceNote: "เอาทอง 2 สลึงไปขายคืนร้านทอง",
   },
   "1baht": {
     weight: 15.2,
     apiPath: "gold-1baht",
     title: "ราคาทอง 1 บาท",
-    priceNote: "เอาทอง 1 บาทไปขายคืนร้านทอง",
   },
   "2baht": {
     weight: 30.4,
     apiPath: "gold-2baht",
     title: "ราคาทอง 2 บาท",
-    priceNote: "เอาทอง 2 บาทไปขายคืนร้านทอง",
   },
   gold9999: {
     weight: 1.0,
     apiPath: "gold-9999",
     title: "ราคาทองคำ 99.99%",
-    priceNote: "ทองคำแท่ง 99.99%",
     is9999: true,
   },
 }
@@ -76,7 +67,16 @@ const utils = {
   },
 
   formatThaiDate(dateStr) {
-    const [day, month, year] = dateStr.split("/")
+    // Check date format and convert if needed
+    let day, month, year
+    if (dateStr.includes("-")) {
+      // Format: YYYY-MM-DD
+      ;[year, month, day] = dateStr.split("-")
+    } else {
+      // Format: DD/MM/YYYY
+      ;[day, month, year] = dateStr.split("/")
+    }
+
     const thaiMonths = [
       "มกราคม",
       "กุมภาพันธ์",
@@ -111,7 +111,6 @@ const utils = {
       weight: parseFloat(element.dataset.weight || defaultValues.weight),
       apiPath: element.dataset.apiPath || defaultValues.apiPath,
       title: element.dataset.title || defaultValues.title,
-      priceNote: element.dataset.priceNote || defaultValues.priceNote,
       is9999: type === "gold9999",
     }
   },
@@ -188,23 +187,22 @@ const productsHandler = {
     products.forEach((product) => {
       const productElement = document.createElement("div")
       productElement.className = "xd9b-productItem"
-      productElement.innerHTML = `
-                <img src="${product.image_url}" alt="${
+      productElement.innerHTML = `<img src="${product.image_url}" alt="${
         product.name
       }" class="xd9b-productImage">
-                <div class="xd9b-productDetails">
-                    <h3 class="xd9b-productName">${product.name}</h3>
-                    <div class="xd9b-productPrice">${utils.formatPrice(
-                      product.price
-                    )} บาท</div>
+            <div class="xd9b-productDetails">
+                <h3 class="xd9b-productName">${product.name}</h3>
+                <div class="xd9b-productPrice">${utils.formatPrice(
+                  product.price
+                )} บาท</div>
                     <div class="xd9b-buttonContainer">
-                        <a href="${product.product_url}" 
-                           class="xd9b-buyButton" 
-                           target="_blank" 
-                           rel="noopener noreferrer">ซื้อเลย</a>
+                      <a href="${product.product_url}" 
+                         class="xd9b-buyButton" 
+                         target="_blank" 
+                         rel="noopener noreferrer">ซื้อเลย</a>
                     </div>
-                </div>
-            `
+                  </div>
+              `
 
       const productImage = productElement.querySelector(".xd9b-productImage")
       const modalInstance = Object.create(modalHandler)
@@ -222,18 +220,22 @@ const productsHandler = {
  */
 const goldPricesHandler = {
   async fetchPrices(containerElement) {
+    const goldType = utils.getGoldTypeFromElement(containerElement)
+
+    // Update page title
+    const titleElement = containerElement.querySelector(".xd9b-header h1")
+    if (titleElement) titleElement.textContent = goldType.title
+
+    // Update price notes
+    this.updatePriceNotes(goldType, containerElement)
+
     try {
       const response = await fetch("http://27.254.3.14:7005/api/gold")
       const data = await response.json()
-      const goldType = utils.getGoldTypeFromElement(containerElement)
-
-      // Update page title
-      const titleElement = containerElement.querySelector(".xd9b-header h1")
-      if (titleElement) titleElement.textContent = goldType.title
+      console.log("API Response:", data) // Debug log
 
       this.updatePrices(data, goldType, containerElement)
       this.updateDateTime(data, containerElement)
-      this.updatePriceNotes(goldType, containerElement)
     } catch (error) {
       console.error("Error fetching gold prices:", error)
       this.showError(containerElement)
@@ -242,18 +244,16 @@ const goldPricesHandler = {
 
   updatePrices(data, goldType, containerElement) {
     if (goldType.is9999) {
-      const sellPrice = utils.roundPrice(
-        (data.G9999B.offer / CONFIG.BAHT_TO_GRAM) * goldType.weight
-      )
-      const buyPrice = utils.roundPrice(
-        (data.G9999B.bid / CONFIG.BAHT_TO_GRAM) * goldType.weight
-      )
+      // For 99.99% gold, price is already per gram
+      const sellPrice = utils.roundPrice(data.G9999B.offer * goldType.weight)
+      const buyPrice = utils.roundPrice(data.G9999B.bid * goldType.weight)
+      const ornamentPrice = utils.roundPrice(buyPrice * 0.95)
 
       this.updatePriceElements(
         {
           sell: sellPrice,
           bar: buyPrice,
-          ornament: buyPrice,
+          ornament: ornamentPrice,
         },
         containerElement
       )
@@ -298,16 +298,85 @@ const goldPricesHandler = {
     const dateElement = containerElement.querySelector("#updateDate")
     const timeElement = containerElement.querySelector("#updateTime")
 
-    const thaiDate = utils.formatThaiDate(data.G965BNewAsso.date)
-    if (dateElement) dateElement.textContent = `ประจำวันที่ ${thaiDate}`
-    if (timeElement)
-      timeElement.textContent = `เวลา: ${data.G965BNewAsso.time} น.`
+    // เลือกใช้ข้อมูลวันที่และเวลาตามประเภททอง
+    const goldType = utils.getGoldTypeFromElement(containerElement)
+    const priceData = goldType.is9999 ? data.G9999B : data.G965BNewAsso
+
+    if (priceData) {
+      const thaiDate = utils.formatThaiDate(priceData.date)
+      if (dateElement) dateElement.textContent = `ประจำวันที่ ${thaiDate}`
+      if (timeElement) timeElement.textContent = `เวลา: ${priceData.time} น.`
+    } else {
+      if (dateElement) dateElement.textContent = "ไม่สามารถโหลดข้อมูลได้"
+      if (timeElement) timeElement.textContent = "ไม่สามารถโหลดข้อมูลได้"
+    }
   },
 
+  // Only keep this version of updatePriceNotes
   updatePriceNotes(goldType, containerElement) {
-    containerElement.querySelectorAll(".xd9b-priceNote").forEach((element) => {
-      element.textContent = `(${goldType.priceNote})`
-    })
+    const priceNotes = containerElement.querySelectorAll(".xd9b-priceNote")
+    const [sellNote, barNote, ornamentNote] = priceNotes
+
+    // Weight text formatting function with all possible weights
+    const getWeightText = (weight, is9999 = false) => {
+      // กรณีทองคำ 99.99%
+      if (is9999) {
+        // ตรวจสอบน้ำหนักและแปลงเป็นหน่วยบาท
+        switch (weight) {
+          case 15.244:
+            return "1 บาท"
+          case 7.622:
+            return "ครึ่งบาท"
+          case 3.811:
+            return "1 สลึง"
+          case 1.9055:
+            return "ครึ่งสลึง"
+          case 1:
+            return "1 บาท" // กรณีน้ำหนัก 1 กรัม ให้แสดงเป็น 1 บาท
+          case 0.5:
+            return "ครึ่งบาท" // กรณี 0.5 กรัม
+          case 0.25:
+            return "1 สลึง" // กรณี 0.25 กรัม
+          default:
+            return `${weight} บาท` // กรณีอื่นๆ ให้แสดงเป็นบาท
+        }
+      }
+
+      // กรณีทองคำปกติ
+      if (weight === 0.3) return "0.3 กรัม"
+      if (weight === 0.6) return "0.6 กรัม"
+      if (weight === 1.0) return "1 กรัม"
+      if (weight === 1.9) return "ครึ่งสลึง"
+      if (weight === 3.8) return "1 สลึง"
+      if (weight === 7.6) return "2 สลึง"
+      if (weight === 15.2) return "1 บาท"
+      if (weight === 30.4) return "2 บาท"
+      return `${weight} กรัม`
+    }
+
+    // Get weight text based on gold type
+    const weightText = getWeightText(goldType.weight, goldType.is9999)
+
+    // Update each price note with fixed formats
+    if (sellNote) {
+      sellNote.textContent = "(ยังไม่รวมค่าบล้อคหรือค่ากำเหน็จ)"
+    }
+
+    if (barNote) {
+      if (goldType.is9999) {
+        barNote.textContent = `(เอาทองคำแท่ง 99.99% ${weightText} ไปขายคืนร้านทอง)`
+      } else {
+        barNote.textContent = `(เอาทองแท่ง ${weightText} ไปขายคืนร้านทอง)`
+      }
+    }
+
+    if (ornamentNote) {
+      if (goldType.is9999) {
+        ornamentNote.textContent = `(เอาทองคำแท่ง 99.99% ${weightText} ไปขายคืนร้านทอง)`
+      } else {
+        ornamentNote.textContent = `(เอาแหวนทอง ${weightText} ไปขายคืนร้านทอง)`
+      }
+    }
   },
 
   showError(containerElement) {
@@ -339,10 +408,10 @@ function initGoldPriceComponent(containerElement) {
   productsHandler.loadProducts(containerElement, goldType)
 
   // Set up auto-refresh
-  setInterval(
-    () => goldPricesHandler.fetchPrices(containerElement),
-    CONFIG.UPDATE_INTERVAL
-  )
+  setInterval(() => {
+    goldPricesHandler.fetchPrices(containerElement)
+    productsHandler.loadProducts(containerElement, goldType)
+  }, CONFIG.UPDATE_INTERVAL)
 }
 
 // Initialize all gold price components on the page
