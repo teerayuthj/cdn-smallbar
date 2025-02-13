@@ -393,11 +393,117 @@ const goldPricesHandler = {
   },
 }
 
+// เพิ่มฟังก์ชันสำหรับจัดการสี
+const colorHandler = {
+  // ค่าสีเริ่มต้น
+  defaultColors: {
+    headerColor: "white", // สีส่วนหัว
+    priceColor: "gold", // สีราคา
+    noteColor: "#888888", // สีหมายเหตุ
+    backgroundColor: "#222", // สีพื้นหลัง
+  },
+
+  // ดึงค่าสีจาก data attributes
+  getColors(element) {
+    return {
+      headerColor:
+        element.dataset.headerColor || this.defaultColors.headerColor,
+      priceColor: element.dataset.priceColor || this.defaultColors.priceColor,
+      noteColor: element.dataset.noteColor || this.defaultColors.noteColor,
+      backgroundColor:
+        element.dataset.backgroundColor || this.defaultColors.backgroundColor,
+    }
+  },
+
+  // ใส่สีให้กับ elements
+  applyColors(containerElement) {
+    const colors = this.getColors(containerElement)
+
+    // สีส่วนหัว
+    const headerElements = containerElement.querySelectorAll(
+      ".xd9b-header h1, .xd9b-header p"
+    )
+    headerElements.forEach((el) => (el.style.color = colors.headerColor))
+
+    // สีราคา
+    const priceElements = containerElement.querySelectorAll(".xd9b-price")
+    priceElements.forEach((el) => (el.style.color = colors.priceColor))
+
+    // สีหมายเหตุ
+    const noteElements = containerElement.querySelectorAll(
+      ".xd9b-priceNote, .xd9b-footerNote"
+    )
+    noteElements.forEach((el) => (el.style.color = colors.noteColor))
+
+    // สีพื้นหลัง
+    containerElement.style.backgroundColor = colors.backgroundColor
+
+    // สีส่วนหัวการ์ด
+    const cardHeaders = containerElement.querySelectorAll(
+      ".xd9b-priceCardHeader"
+    )
+    cardHeaders.forEach((el) => {
+      el.style.color = colors.headerColor
+      // เพิ่มความโปร่งใสให้พื้นหลังการ์ด
+      el.style.backgroundColor = this.adjustOpacity(colors.backgroundColor, 0.5)
+    })
+
+    // สีพื้นหลังการ์ด
+    const cards = containerElement.querySelectorAll(".xd9b-priceCard")
+    cards.forEach((el) => {
+      el.style.backgroundColor = this.adjustOpacity(colors.backgroundColor, 0.3)
+      el.style.borderColor = colors.headerColor
+    })
+  },
+
+  // ฟังก์ชันปรับความโปร่งใสของสี
+  adjustOpacity(color, opacity) {
+    // แปลงสี hex เป็น rgb ถ้าจำเป็น
+    let r, g, b
+    if (color.startsWith("#")) {
+      r = parseInt(color.slice(1, 3), 16)
+      g = parseInt(color.slice(3, 5), 16)
+      b = parseInt(color.slice(5, 7), 16)
+    } else if (color.startsWith("rgb")) {
+      const match = color.match(/\d+/g)
+      ;[r, g, b] = match
+    } else {
+      // สีที่เป็นชื่อ (เช่น 'red', 'blue') ให้ใช้ค่าเริ่มต้น
+      return `rgba(0, 0, 0, ${opacity})`
+    }
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`
+  },
+}
+
+const headerColorHandler = {
+  // ค่าสีเริ่มต้นสำหรับ header
+  defaultHeaderColor: "white",
+
+  // ดึงค่าสีจาก data attributes
+  getHeaderColor(element) {
+    return element.dataset.headerColor || this.defaultHeaderColor
+  },
+
+  // ใส่สีให้กับ header elements
+  applyHeaderColor(containerElement) {
+    const headerColor = this.getHeaderColor(containerElement)
+
+    // เลือกเฉพาะ elements ใน xd9b-header
+    const headerElements = containerElement.querySelectorAll(
+      ".xd9b-header h1, .xd9b-header p"
+    )
+    headerElements.forEach((el) => (el.style.color = headerColor))
+  },
+}
+
 /**
  * Initialize Gold Price Component
  */
 function initGoldPriceComponent(containerElement) {
   const goldType = utils.getGoldTypeFromElement(containerElement)
+
+  // เพิ่มการจัดการสีเฉพาะ header
+  headerColorHandler.applyHeaderColor(containerElement)
 
   // Initialize handlers
   const modalInstance = Object.create(modalHandler)
