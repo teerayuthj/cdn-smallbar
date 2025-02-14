@@ -26,27 +26,27 @@ const defaultTypes = {
     title: "ราคาทอง 1 กรัม",
   },
   "0125baht": {
-    weight: 1.9,
+    weight: 1.9055,
     apiPath: "gold-0125baht",
     title: "ราคาทองครึ่งสลึง",
   },
   "025baht": {
-    weight: 3.8,
+    weight: 3.811,
     apiPath: "gold-025baht",
     title: "ราคาทอง 1 สลึง",
   },
   "05baht": {
-    weight: 7.6,
+    weight: 7.622,
     apiPath: "gold-05baht",
     title: "ราคาทอง 2 สลึง",
   },
   "1baht": {
-    weight: 15.2,
+    weight: 15.244,
     apiPath: "gold-1baht",
     title: "ราคาทอง 1 บาท",
   },
   "2baht": {
-    weight: 30.4,
+    weight: 30.488,
     apiPath: "gold-2baht",
     title: "ราคาทอง 2 บาท",
   },
@@ -63,7 +63,12 @@ const defaultTypes = {
  */
 const utils = {
   roundPrice(price) {
-    return Math.floor(price + (price % 1 > 0.5 ? 1 : 0))
+    // Get the decimal part
+    const decimal = price % 1
+
+    // If decimal is exactly 0.5 or greater, round up
+    // If decimal is less than 0.5, round down
+    return decimal >= 0.5 ? Math.ceil(price) : Math.floor(price)
   },
 
   formatThaiDate(dateStr) {
@@ -326,19 +331,19 @@ const goldPricesHandler = {
           case 15.244:
             return "1 บาท"
           case 7.622:
-            return "ครึ่งบาท"
+            return "2 สลึง"
           case 3.811:
             return "1 สลึง"
           case 1.9055:
             return "ครึ่งสลึง"
           case 1:
-            return "1 บาท" // กรณีน้ำหนัก 1 กรัม ให้แสดงเป็น 1 บาท
-          case 0.5:
-            return "ครึ่งบาท" // กรณี 0.5 กรัม
+            return "1 บาท"
+          case 30.488:
+            return "2 บาท"
           case 0.25:
-            return "1 สลึง" // กรณี 0.25 กรัม
+            return "1 สลึง"
           default:
-            return `${weight} บาท` // กรณีอื่นๆ ให้แสดงเป็นบาท
+            return `${weight} บาท`
         }
       }
 
@@ -346,11 +351,11 @@ const goldPricesHandler = {
       if (weight === 0.3) return "0.3 กรัม"
       if (weight === 0.6) return "0.6 กรัม"
       if (weight === 1.0) return "1 กรัม"
-      if (weight === 1.9) return "ครึ่งสลึง"
-      if (weight === 3.8) return "1 สลึง"
-      if (weight === 7.6) return "2 สลึง"
-      if (weight === 15.2) return "1 บาท"
-      if (weight === 30.4) return "2 บาท"
+      if (weight === 1.9055) return "ครึ่งสลึง"
+      if (weight === 3.811) return "1 สลึง"
+      if (weight === 7.622) return "2 สลึง"
+      if (weight === 15.244) return "1 บาท"
+      if (weight === 30.488) return "2 บาท"
       return `${weight} กรัม`
     }
 
